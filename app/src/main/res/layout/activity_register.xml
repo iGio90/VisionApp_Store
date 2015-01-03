@@ -1,0 +1,380 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/azzurro_sfondo"
+    android:id="@+id/register_layout"
+    tools:context="${packageName}.${activityClass}" >
+
+    <RelativeLayout
+        android:layout_width="500dp"
+        android:layout_height="600dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@color/white" >
+
+        <it.visionapps.storevisionapps.widgets.NexaTextView
+            android:id="@+id/register_title"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="2dp"
+            android:background="@color/azzurro_sfondo"
+            android:gravity="center"
+            android:text="@string/entra"
+            android:textColor="@color/white"
+            android:textSize="25sp" />
+
+        <ImageView
+            android:id="@+id/imageLogo"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/register_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/logo_login" />
+
+        <it.visionapps.storevisionapps.widgets.NexaTextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageLogo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:text="@string/register_text_crea"
+            android:textSize="20sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView1"
+            android:layout_marginTop="30dp"
+            android:background="@color/gray" >
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/gray" >
+
+                    <it.visionapps.storevisionapps.widgets.NexaEditText
+                        android:id="@+id/register_nome"
+                        android:layout_width="220dp"
+                        android:layout_height="35dp"
+                        android:layout_alignLeft="@+id/textView2"
+                        android:layout_below="@+id/textView2"
+                        android:layout_marginTop="10dp"
+                        android:ems="10"
+                        android:hint="@string/register_text_nome"
+                        android:inputType="textCapSentences" >
+                    </it.visionapps.storevisionapps.widgets.NexaEditText>
+
+                    <it.visionapps.storevisionapps.widgets.NexaEditText
+                        android:id="@+id/register_password"
+                        android:layout_width="220dp"
+                        android:layout_height="35dp"
+                        android:layout_alignLeft="@+id/textView5"
+                        android:layout_below="@+id/textView5"
+                        android:layout_marginTop="10dp"
+                        android:ems="10"
+                        android:inputType="textPassword" />
+
+                    <Spinner
+                        android:id="@+id/register_job"
+                        android:layout_width="220dp"
+                        android:layout_height="35dp"
+                        android:layout_alignLeft="@+id/textView6"
+                        android:layout_below="@+id/textView6"
+                        android:layout_marginTop="10dp"
+                        android:entries="@array/register_jobs"
+                        android:prompt="@string/register_jobs_prompt" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaEditText
+                        android:id="@+id/register_email"
+                        android:layout_width="220dp"
+                        android:layout_height="35dp"
+                        android:layout_below="@+id/textView4"
+                        android:layout_marginLeft="19dp"
+                        android:layout_toLeftOf="@+id/register_cognome"
+                        android:ems="10"
+                        android:inputType="textEmailAddress" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaTextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/register_email"
+                        android:layout_below="@+id/register_nome"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/register_text_email" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaTextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/register_email"
+                        android:layout_below="@+id/register_email"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/register_text_password" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaTextView
+                        android:id="@+id/textView7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/register_job"
+                        android:layout_below="@+id/register_job"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/register_text_ragionesociale" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaEditText
+                        android:id="@+id/register_ragionesociale"
+                        android:layout_width="220dp"
+                        android:layout_height="35dp"
+                        android:layout_below="@+id/textView7"
+                        android:layout_marginTop="16dp"
+                        android:layout_toLeftOf="@+id/register_cognome"
+                        android:ems="10"
+                        android:inputType="textCapSentences" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaEditText
+                        android:id="@+id/register_cognome"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/textView4"
+                        android:layout_marginLeft="30dp"
+                        android:layout_toRightOf="@+id/register_nome"
+                        android:ems="10"
+                        android:hint="@string/register_text_cognome"
+                        android:inputType="textCapSentences" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaEditText
+                        android:id="@+id/register_via"
+                        android:layout_width="220dp"
+                        android:layout_height="35dp"
+                        android:layout_alignLeft="@+id/textView111"
+                        android:layout_below="@+id/textView111"
+                        android:layout_marginTop="20dp"
+                        android:ems="10"
+                        android:hint="@string/register_text_via"
+                        android:inputType="text" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaTextView
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/register_password"
+                        android:layout_below="@+id/register_password"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/register_text_professionista" />
+
+                    <Button
+                        android:id="@+id/register_button"
+                        android:layout_width="220dp"
+                        android:layout_height="35dp"
+                        android:layout_alignLeft="@+id/register_piva"
+                        android:layout_below="@+id/register_privacy"
+                        android:layout_marginTop="40dp"
+                        android:background="@color/azzurro_sfondo"
+                        android:text="@string/register_button"
+                        android:textColor="@color/white" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaEditText
+                        android:id="@+id/register_email1"
+                        android:layout_width="220dp"
+                        android:layout_height="35dp"
+                        android:layout_alignBottom="@+id/register_email"
+                        android:layout_alignLeft="@+id/register_cognome"
+                        android:ems="10"
+                        android:inputType="textEmailAddress" >
+                    </it.visionapps.storevisionapps.widgets.NexaEditText>
+
+                    <it.visionapps.storevisionapps.widgets.NexaTextView
+                        android:id="@+id/textView14"
+                        android:layout_width="220dp"
+                        android:layout_height="35dp"
+                        android:layout_alignBaseline="@+id/textView4"
+                        android:layout_alignBottom="@+id/textView4"
+                        android:layout_alignLeft="@+id/register_email1"
+                        android:text="@string/register_text_emailconferma" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaEditText
+                        android:id="@+id/register_password1"
+                        android:layout_width="220dp"
+                        android:layout_height="35dp"
+                        android:layout_alignBaseline="@+id/register_password"
+                        android:layout_alignBottom="@+id/register_password"
+                        android:layout_alignLeft="@+id/register_email1"
+                        android:ems="10"
+                        android:inputType="textPassword" >
+                    </it.visionapps.storevisionapps.widgets.NexaEditText>
+
+                    <it.visionapps.storevisionapps.widgets.NexaTextView
+                        android:id="@+id/textView15"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/register_password"
+                        android:layout_alignLeft="@+id/register_password1"
+                        android:text="@string/register_text_passwordconferma" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaEditText
+                        android:id="@+id/register_cap"
+                        android:layout_width="220dp"
+                        android:layout_height="35dp"
+                        android:layout_alignLeft="@+id/register_via"
+                        android:layout_below="@+id/register_via"
+                        android:layout_marginTop="20dp"
+                        android:ems="10"
+                        android:hint="@string/register_text_cap"
+                        android:inputType="text|number" >
+                    </it.visionapps.storevisionapps.widgets.NexaEditText>
+
+                    <it.visionapps.storevisionapps.widgets.NexaEditText
+                        android:id="@+id/register_stato"
+                        android:layout_width="220dp"
+                        android:layout_height="35dp"
+                        android:layout_alignBaseline="@+id/register_provincia"
+                        android:layout_alignBottom="@+id/register_provincia"
+                        android:layout_alignLeft="@+id/register_citta"
+                        android:ems="10"
+                        android:hint="@string/register_text_stato"
+                        android:inputType="textCapSentences" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaEditText
+                        android:id="@+id/register_numerocivico"
+                        android:layout_width="220dp"
+                        android:layout_height="35dp"
+                        android:layout_above="@+id/register_cap"
+                        android:layout_marginLeft="24dp"
+                        android:layout_toRightOf="@+id/register_via"
+                        android:ems="10"
+                        android:hint="@string/register_text_numerocivico"
+                        android:inputType="text|number" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaEditText
+                        android:id="@+id/register_citta"
+                        android:layout_width="220dp"
+                        android:layout_height="35dp"
+                        android:layout_alignBaseline="@+id/register_cap"
+                        android:layout_alignBottom="@+id/register_cap"
+                        android:layout_alignLeft="@+id/register_numerocivico"
+                        android:ems="10"
+                        android:hint="@string/register_text_citta"
+                        android:inputType="textCapSentences" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaTextView
+                        android:id="@+id/textView11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/register_provincia"
+                        android:layout_below="@+id/register_provincia"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/register_text_piva" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaEditText
+                        android:maxLength="11"
+                        android:id="@+id/register_piva"
+                        android:layout_width="220dp"
+                        android:layout_height="35dp"
+                        android:layout_alignLeft="@+id/textView11"
+                        android:layout_below="@+id/textView11"
+                        android:layout_marginTop="14dp"
+                        android:ems="10"
+                        android:inputType="text|number" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaEditText
+                        android:id="@+id/register_provincia"
+                        android:layout_width="220dp"
+                        android:layout_height="35dp"
+                        android:layout_alignLeft="@+id/register_cap"
+                        android:layout_below="@+id/register_cap"
+                        android:layout_marginTop="20dp"
+                        android:ems="10"
+                        android:hint="@string/register_text_provincia"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="2" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaTextView
+                        android:id="@+id/textView111"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/register_ragionesociale"
+                        android:layout_below="@+id/register_ragionesociale"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/register_text_via" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaTextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/register_text_nome" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaTextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/register_privacy"
+                        android:layout_alignBottom="@+id/register_privacy"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toRightOf="@+id/register_privacy"
+                        android:text="Accetto i " />
+
+                    <it.visionapps.storevisionapps.widgets.NexaTextView
+                        android:id="@+id/register_linktermini"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/textView3"
+                        android:layout_alignBottom="@+id/textView3"
+                        android:layout_toRightOf="@+id/textView3"
+                        android:text="termini di servizio"
+                        android:textColor="@color/azzurro_sfondo" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaTextView
+                        android:id="@+id/textView9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/register_linktermini"
+                        android:layout_alignBottom="@+id/register_linktermini"
+                        android:layout_toRightOf="@+id/register_linktermini"
+                        android:text=" e le " />
+
+                    <it.visionapps.storevisionapps.widgets.NexaTextView
+                        android:id="@+id/register_linkprivacy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/textView3"
+                        android:layout_below="@+id/textView3"
+                        android:text="norme sulla privacy"
+                        android:textColor="@color/azzurro_sfondo" />
+
+                    <it.visionapps.storevisionapps.widgets.NexaTextView
+                        android:id="@+id/textView12"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/register_linkprivacy"
+                        android:layout_alignBottom="@+id/register_linkprivacy"
+                        android:layout_toRightOf="@+id/register_linkprivacy"
+                        android:text=" di VisionApps" />
+
+                    <CheckBox
+                        android:id="@+id/register_privacy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/register_nome"
+                        android:layout_below="@id/register_piva"
+                        android:layout_marginTop="20dp" />
+                </RelativeLayout>
+            </ScrollView>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
