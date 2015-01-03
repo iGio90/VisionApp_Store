@@ -4,5 +4,5 @@ import org.json.JSONObject;
 
 public interface ApiHandler {
 	public void onSuccess(JSONObject object);
-	public void onError(Exception e);
+	public void onError(String e);
 }

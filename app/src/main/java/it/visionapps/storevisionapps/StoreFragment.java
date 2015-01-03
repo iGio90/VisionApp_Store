@@ -42,15 +42,15 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     private void fetchApps() {
-        Api.parseApi(Api.APP_LIST, new ApiHandler() {
+        ApiHelper.parseApi(ApiHelper.APP_LIST, new ApiHandler() {
             @Override
             public void onSuccess(JSONObject object) {
                 Log.e("bam", object.toString());
             }
 
             @Override
-            public void onError(Exception e) {
-
+            public void onError(String e) {
+                Log.e("bam", e);
             }
         });
     }

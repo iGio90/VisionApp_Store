@@ -105,33 +105,6 @@ public class LoginActivity extends Activity {
                                 Intent i = new Intent(getApplicationContext(), StartActivity.class);
                                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(i);
-
-                                final ProgressDialog progress = new ProgressDialog(LoginActivity.this);
-                                progress.setMessage("Sincronizzazione in corso...");
-                                progress.show();
-                                Api.syncExtras(new ApiHandler() {
-                                    @Override
-                                    public void onSuccess() {
-                                        try {
-                                            if (progress.isShowing())
-                                                progress.dismiss();
-                                        } catch (IllegalArgumentException ignored) {}
-                                    }
-                                    @Override
-                                    public void onError() {
-                                        try {
-                                            if (progress.isShowing())
-                                                progress.dismiss();
-                                        } catch (IllegalArgumentException ignored) {}
-                                        new AlertDialog.Builder(LoginActivity.this)
-                                                .setMessage("Errore durante la sincronizzazione")
-                                                .setCancelable(true)
-                                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.dismiss();
-                                                    }}).create().show();
-                                    }
-                                });
                             }
                         });
             }

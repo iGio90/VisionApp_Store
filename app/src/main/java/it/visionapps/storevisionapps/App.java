@@ -8,12 +8,14 @@ import android.app.Application;
 public class App extends Application {
     private static App mApp;
     private SettingsProvider mProvider;
+    private ApiHelper mApiHelper;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mApp = this;
         mProvider = new SettingsProvider(this);
+        mApiHelper = new ApiHelper();
     }
 
     public static App getInstance() {
@@ -22,5 +24,9 @@ public class App extends Application {
 
     public SettingsProvider getProvider() {
         return mProvider;
+    }
+
+    public ApiHelper getApiHelper() {
+        return mApiHelper;
     }
 }
