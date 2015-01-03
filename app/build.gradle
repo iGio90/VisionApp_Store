@@ -33,6 +33,8 @@ dependencies {
     compile 'com.android.support:support-v13:21.0.2'
     compile 'com.android.support:recyclerview-v7:21.0.2'
     compile 'com.android.support:cardview-v7:21.0.2'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
+    compile 'com.makeramen:roundedimageview:1.5.0'
     compile files('libs/android-async-http-1.4.4.jar')
     compile project(':materialDrawer')
 }
