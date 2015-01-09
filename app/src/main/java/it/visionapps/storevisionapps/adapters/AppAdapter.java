@@ -27,9 +27,11 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppHolder> {
 
     private Activity mContext;
     private final ArrayList<AppModel> mItems = new ArrayList<>();
+    private OnAppClicked mListener;
 
-    public AppAdapter(Activity context) {
+    public AppAdapter(Activity context, OnAppClicked onAppClicked) {
         mContext = context;
+        mListener = onAppClicked;
     }
 
     public void set(ArrayList<AppModel> items) {
@@ -92,6 +94,17 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppHolder> {
 
             holder.mTitle.setText(item.getTitle());
             ImageLoader.getInstance().displayImage(item.getIconUrl(), holder.mIcon, App.getNoFallbackOptions());
+
+            holder.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onAppClicked(item);
+                }
+            });
         }
+    }
+
+    public interface OnAppClicked {
+        public void onAppClicked(AppModel appModel);
     }
 }

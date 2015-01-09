@@ -29,7 +29,6 @@
         </activity>
         <activity
             android:name=".RegisterActivity"
-            android:screenOrientation="landscape"
             android:label="@string/title_activity_register"
             android:windowSoftInputMode="stateHidden"
             android:configChanges="keyboardHidden|orientation|screenLayout"
@@ -37,7 +36,6 @@
         </activity>
         <activity
             android:name=".ChangePasswordActivity"
-            android:screenOrientation="landscape"
             android:label="@string/title_activity_change_password"
             android:windowSoftInputMode="stateHidden"
             android:configChanges="keyboardHidden|orientation|screenLayout"

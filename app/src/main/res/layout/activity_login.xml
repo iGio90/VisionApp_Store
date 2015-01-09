@@ -54,7 +54,7 @@
             android:layout_below="@+id/textView1"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
-            android:background="@color/grey_600" >
+            android:background="@color/grey_white_1000" >
 
             <it.visionapps.storevisionapps.widgets.NexaEditText
                 android:id="@+id/login_password"

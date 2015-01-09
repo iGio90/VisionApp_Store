@@ -24,6 +24,8 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
 
     private Handler mProcessHandler;
 
+    private StoreFragment mStoreFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +44,11 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
         mDrawer = this;
         setDrawerDPWidth(300);
 
+        mStoreFragment = new StoreFragment();
+
         MaterialMenu mMenu = new MaterialMenu();
-        MaterialSection mStore = newSection(getString(R.string.store), this.getResources().getDrawable(R.drawable.ic_launcher), new StoreFragment(), false);
-        MaterialSection mMyApps = newSection(getString(R.string.my_applications), this.getResources().getDrawable(R.drawable.ic_launcher), new StoreFragment(), false);
+        MaterialSection mStore = newSection(getString(R.string.store), this.getResources().getDrawable(R.drawable.ic_launcher), mStoreFragment, false);
+        MaterialSection mMyApps = newSection(getString(R.string.my_applications), this.getResources().getDrawable(R.drawable.ic_launcher), mStoreFragment, false);
 
         MaterialSection settingsSection = this.newSection("Settings", true);
 
@@ -71,5 +75,15 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
     @Override
     public void onAfterChangedHeadItem(MaterialHeadItem newHeadItem) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mStoreFragment != null &&
+                mStoreFragment.isInDetails()) {
+            mStoreFragment.leaveDetails();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

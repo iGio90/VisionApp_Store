@@ -21,4 +21,10 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"/>
     </RelativeLayout>
+
+
+    <include
+        android:id="@+id/app_details_fragment"
+        layout="@layout/app_details_fragment"
+        android:visibility="gone" />
 </FrameLayout>

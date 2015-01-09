@@ -8,6 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,12 +28,18 @@ import it.visionapps.storevisionapps.widgets.SuperRecyclerView;
 /**
  * Created by iGio90 on 03/01/15.
  */
-public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AppAdapter.OnAppClicked {
 
     private SuperRecyclerView mAppList;
     private GridLayoutManager mAppLayoutManager;
     private AppAdapter mAdapter;
     private MainStoreActivity mActivity;
+
+    // Details
+    private boolean inDetails = false;
+    private LinearLayout mDeatilsContainer;
+    private TextView mTitle;
+    private ImageView mIcon;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,8 +54,12 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         mAppList.setRefreshListener(this);
         mAppList.setRefreshingColorResources(android.R.color.holo_orange_light, android.R.color.holo_blue_light, android.R.color.holo_green_light, android.R.color.holo_red_light);
 
-        mAdapter = new AppAdapter(mActivity);
+        mAdapter = new AppAdapter(mActivity, this);
         mAppList.setAdapter(mAdapter);
+
+        mDeatilsContainer = (LinearLayout) root.findViewById(R.id.app_details_fragment);
+        mTitle = (TextView) mDeatilsContainer.findViewById(R.id.title);
+        mIcon = (ImageView) mDeatilsContainer.findViewById(R.id.icon);
 
         fetchApps();
         return root;
@@ -94,8 +110,45 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
             @Override
             public void onError(String e) {
-                Log.e("bam", e);
             }
         });
+    }
+
+    @Override
+    public void onAppClicked(AppModel appModel) {
+        ApiHelper.parseApi(ApiHelper.APP_DETAILS + "/" + appModel.getTitle() + "/stable", new ApiHandler() {
+            @Override
+            public void onSuccess(final JSONObject object) {
+                if (mActivity != null) {
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            inDetails = true;
+
+                            try {
+                                JSONObject data = object.getJSONObject("data");
+                                mTitle.setText(data.getString("app_name"));
+                                ImageLoader.getInstance().displayImage(data.getString("icon_url"), mIcon, App.getNoFallbackOptions());
+                                mDeatilsContainer.setVisibility(View.VISIBLE);
+                            } catch (JSONException ignored) {
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onError(String e) {
+            }
+        });
+    }
+
+    public void leaveDetails() {
+        inDetails = false;
+        mDeatilsContainer.setVisibility(View.GONE);
+    }
+
+    public boolean isInDetails() {
+        return inDetails;
     }
 }

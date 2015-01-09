@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="MaterialNavigationDrawerTheme">
+    <style name="AppTheme" parent="MaterialNavigationDrawerTheme.Light">
         <item name="colorPrimary">@color/light_blue_600</item>
         <item name="colorAccent">#FFFFFF</item>
     </style>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?android:attr/windowBackground"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.makeramen.RoundedImageView
+                    android:layout_height="75dp"
+                    android:layout_width="75dp"
+                    android:id="@+id/icon"
+                    android:scaleType="centerCrop"
+                    app:riv_corner_radius="65dip"
+                    app:riv_mutate_background="true"
+                    app:riv_oval="false"
+                    android:layout_gravity="top|center_horizontal"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/title"
+                    android:textColor="@color/grey_800"
+                    android:maxLines="3"
+                    android:lines="3"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:gravity="center"
+                    android:padding="6dp"
+                    android:singleLine="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/icon"
+                    android:layout_toEndOf="@+id/icon"
+                    android:layout_marginLeft="8dp" />
+                </RelativeLayout>
+            </LinearLayout>
+        </ScrollView>
+</LinearLayout>

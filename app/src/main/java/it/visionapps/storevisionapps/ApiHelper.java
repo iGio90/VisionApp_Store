@@ -42,10 +42,12 @@ import java.security.cert.CertificateException;
 
 public class ApiHelper {
     public static final String APP_LIST = "https://www.visionapps.it/app/api_v2/apps_list";
+    public static final String APP_DETAILS = "https://www.visionapps.it/app/api_v2/apps_update";
 
     public static void parseApi(String api, ApiHandler handler) {
         ApiThread thread = new ApiThread(api, handler);
         thread.start();
+        Log.e("bam", api);
     }
 
     private static class ApiThread extends Thread {
