@@ -47,7 +47,6 @@ public class ApiHelper {
     public static void parseApi(String api, ApiHandler handler) {
         ApiThread thread = new ApiThread(api, handler);
         thread.start();
-        Log.e("bam", api);
     }
 
     private static class ApiThread extends Thread {

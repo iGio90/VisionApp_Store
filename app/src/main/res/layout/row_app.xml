@@ -29,14 +29,11 @@
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal">
 
-                <com.makeramen.RoundedImageView
+                <ImageView
                     android:layout_height="75dp"
                     android:layout_width="75dp"
                     android:id="@+id/icon"
                     android:scaleType="centerCrop"
-                    app:riv_corner_radius="65dip"
-                    app:riv_mutate_background="true"
-                    app:riv_oval="false"
                     android:layout_marginTop="12dp"
                     android:layout_gravity="top|center_horizontal" />
 

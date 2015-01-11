@@ -1,5 +1,6 @@
 package it.visionapps.storevisionapps;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,9 +40,12 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     // Details
     private boolean inDetails = false;
-    private LinearLayout mDeatilsContainer;
+    private LinearLayout mDetailsContainer;
     private TextView mTitle;
+    private TextView mVersion;
     private ImageView mIcon;
+    private TextView mChangelog;
+    private LinearLayout mScreenshots;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,9 +63,12 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         mAdapter = new AppAdapter(mActivity, this);
         mAppList.setAdapter(mAdapter);
 
-        mDeatilsContainer = (LinearLayout) root.findViewById(R.id.app_details_fragment);
-        mTitle = (TextView) mDeatilsContainer.findViewById(R.id.title);
-        mIcon = (ImageView) mDeatilsContainer.findViewById(R.id.icon);
+        mDetailsContainer = (LinearLayout) root.findViewById(R.id.app_details_fragment);
+        mTitle = (TextView) mDetailsContainer.findViewById(R.id.title);
+        mVersion = (TextView) mDetailsContainer.findViewById(R.id.version);
+        mIcon = (ImageView) mDetailsContainer.findViewById(R.id.icon);
+        mChangelog = (TextView) mDetailsContainer.findViewById(R.id.changelog);
+        mScreenshots = (LinearLayout) mDetailsContainer.findViewById(R.id.screenshots);
 
         fetchApps();
         return root;
@@ -128,9 +137,40 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             try {
                                 JSONObject data = object.getJSONObject("data");
                                 mTitle.setText(data.getString("app_name"));
+                                mVersion.setText(data.getString("version_name"));
                                 ImageLoader.getInstance().displayImage(data.getString("icon_url"), mIcon, App.getNoFallbackOptions());
-                                mDeatilsContainer.setVisibility(View.VISIBLE);
+                                mChangelog.setText(data.getString("version_changelog"));
+                                mDetailsContainer.setVisibility(View.VISIBLE);
+
+                                JSONArray screenshots = data.getJSONArray("screenshots_urls");
+                                Log.e("bam", "size :" + screenshots.length());
+                                for (int i=0;i<screenshots.length();i++) {
+                                    Log.e("bam", (String) screenshots.get(i));
+                                    final ImageView mScreen = new ImageView(mActivity);
+                                    ImageLoader.getInstance().displayImage((String) screenshots.get(i), mScreen, App.getNoFallbackOptions(), new ImageLoadingListener() {
+                                        @Override
+                                        public void onLoadingStarted(String imageUri, View view) {
+
+                                        }
+
+                                        @Override
+                                        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+                                        }
+
+                                        @Override
+                                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                                            mScreenshots.addView(mScreen);
+                                        }
+
+                                        @Override
+                                        public void onLoadingCancelled(String imageUri, View view) {
+
+                                        }
+                                    });
+                                }
                             } catch (JSONException ignored) {
+                                Log.e("bam", ignored.toString());
                             }
                         }
                     });
@@ -145,7 +185,7 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     public void leaveDetails() {
         inDetails = false;
-        mDeatilsContainer.setVisibility(View.GONE);
+        mDetailsContainer.setVisibility(View.GONE);
     }
 
     public boolean isInDetails() {

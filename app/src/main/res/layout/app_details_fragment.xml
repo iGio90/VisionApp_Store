@@ -17,35 +17,80 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <com.makeramen.RoundedImageView
+                <ImageView
                     android:layout_height="75dp"
                     android:layout_width="75dp"
                     android:id="@+id/icon"
                     android:scaleType="centerCrop"
-                    app:riv_corner_radius="65dip"
-                    app:riv_mutate_background="true"
-                    app:riv_oval="false"
                     android:layout_gravity="top|center_horizontal"
-                    android:layout_centerVertical="true"
+                    android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true" />
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:id="@+id/title"
-                    android:textColor="@color/grey_800"
-                    android:maxLines="3"
-                    android:lines="3"
-                    android:layout_gravity="bottom|center_horizontal"
-                    android:gravity="center"
-                    android:padding="6dp"
-                    android:singleLine="true"
-                    android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/icon"
                     android:layout_toEndOf="@+id/icon"
-                    android:layout_marginLeft="8dp" />
-                </RelativeLayout>
-            </LinearLayout>
-        </ScrollView>
+                    android:layout_marginLeft="8dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignBottom="@+id/icon"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:id="@+id/title"
+                        android:textColor="@color/grey_black_1000"
+                        android:padding="2dp"
+                        android:singleLine="true"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:id="@+id/version"
+                        android:textColor="@color/grey_500"
+                        android:padding="2dp"
+                        android:singleLine="true"/>
+                </LinearLayout>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/icon"
+                    android:layout_alignParentLeft="true"
+                    android:padding="14dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="12dp">
+
+                    <LinearLayout
+                        android:padding="16dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/changelog"
+                            android:textColor="@color/grey_800"
+                            android:padding="2dp"
+                            android:singleLine="true"/>
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+            </RelativeLayout>
+            <HorizontalScrollView
+                android:layout_marginTop="12dp"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/screenshots" />
+            </HorizontalScrollView>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
