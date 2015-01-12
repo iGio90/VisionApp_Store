@@ -1,7 +1,10 @@
 package it.visionapps.storevisionapps;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,6 +28,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import it.visionapps.storevisionapps.adapters.AppAdapter;
@@ -47,6 +57,7 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private ObservableScrollView mMainScrollView;
     private TextView mTitle;
     private TextView mVersion;
+    private TextView mPrice;
     private ImageView mIcon;
     private TextView mChangelog;
     private LinearLayout mScreenshots;
@@ -73,6 +84,7 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         mMainScrollView = (ObservableScrollView) root.findViewById(R.id.details_scroll);
         mTitle = (TextView) mDetailsContainer.findViewById(R.id.title);
         mVersion = (TextView) mDetailsContainer.findViewById(R.id.version);
+        mPrice = (TextView) mDetailsContainer.findViewById(R.id.price);
         mIcon = (ImageView) mDetailsContainer.findViewById(R.id.icon);
         mChangelog = (TextView) mDetailsContainer.findViewById(R.id.changelog);
         mScreenshots = (LinearLayout) mDetailsContainer.findViewById(R.id.screenshots);
@@ -146,20 +158,47 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             inDetails = true;
 
                             try {
-                                JSONObject data = object.getJSONObject("data");
-                                mTitle.setText(data.getString("app_name"));
-                                mVersion.setText(data.getString("version_name"));
+                                final JSONObject data = object.getJSONObject("data");
+                                final String appName = data.getString("app_name");
+                                mTitle.setText(appName);
+                                final String appVersion = data.getString("version_name");
+                                mVersion.setText(appVersion);
+
+                                String price = data.getString("app_price");
+                                if (price.equals("free") || price.equals("0")) {
+                                    mPrice.setText("Free");
+                                } else {
+                                    mPrice.setText(price + "€");
+                                }
                                 ImageLoader.getInstance().displayImage(data.getString("icon_url"), mIcon, App.getNoFallbackOptions());
                                 mChangelog.setText(data.getString("version_changelog"));
-                                mDescription.setText(data.getString("version_changelog"));
-                                if (Utils.isAppInstalled(mActivity, "packagename")) {
+                                mDescription.setText(data.getString("app_description"));
+                                final String apkUrl = data.getString("apk_url");
+                                if (Utils.isAppInstalled(mActivity, data.getString("app_packagename"))) {
                                     mFab.setImageResource(R.drawable.ic_delete);
                                     mFab.setColorNormal(getResources().getColor(R.color.red_400));
                                     mFab.setColorPressed(getResources().getColor(R.color.red_600));
+                                    mFab.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            try {
+                                                Uri packageUri = Uri.parse("package:" + data.getString("app_packagename"));
+                                                Intent uninstallIntent =
+                                                        new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
+                                                startActivity(uninstallIntent);
+                                            } catch (JSONException ignored) {}
+                                        }
+                                    });
                                 } else {
                                     mFab.setImageResource(R.drawable.ic_file_download);
                                     mFab.setColorNormal(getResources().getColor(R.color.green_400));
                                     mFab.setColorPressed(getResources().getColor(R.color.green_600));
+                                    mFab.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            mActivity.getProcessHandler().post(new DownloadThread(apkUrl, appName, appVersion));
+                                        }
+                                    });
                                 }
 
                                 JSONArray screenshots = data.getJSONArray("screenshots_urls");
@@ -203,6 +242,17 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         });
     }
 
+    private void updateProgress(File file, int currentSize, int totalFileSize) {
+        Log.e("bam", "size: " + currentSize + " - " + totalFileSize);
+        if (currentSize == totalFileSize) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.fromFile(file),
+                    "application/vnd.android.package-archive");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+    }
+
     public void leaveDetails() {
         inDetails = false;
         mDetailsContainer.setVisibility(View.GONE);
@@ -210,5 +260,48 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     public boolean isInDetails() {
         return inDetails;
+    }
+
+    class DownloadThread extends Thread {
+        String mUrl;
+        String mAppName;
+        String mVersion;
+
+        public DownloadThread(String url, String name, String version) {
+            mUrl = url;
+            mAppName = name;
+            mVersion = version;
+        }
+
+        @Override
+        public void run() {
+            try {
+                URL url = new URL(mUrl);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setDoOutput(true);
+                urlConnection.connect();
+                File file = new File(App.getInstance().getFilesDir(), mAppName + "_" + mVersion + ".apk");
+                file.setReadable(true, false);
+
+                FileOutputStream fileOutput = new FileOutputStream(file);
+                InputStream inputStream = urlConnection.getInputStream();
+
+                int totalSize = urlConnection.getContentLength();
+                int downloadedSize = 0;
+
+                byte[] buffer = new byte[1024];
+                int bufferLength = 0;
+
+                while ( (bufferLength = inputStream.read(buffer)) > 0 ) {
+                    fileOutput.write(buffer, 0, bufferLength);
+                    downloadedSize += bufferLength;
+                    updateProgress(file, downloadedSize, totalSize);
+                }
+                fileOutput.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

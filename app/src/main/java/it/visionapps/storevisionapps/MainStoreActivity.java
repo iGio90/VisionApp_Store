@@ -5,8 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.os.StrictMode;
 
 import de.madcyph3r.materialnavigationdrawer.MaterialNavigationDrawer;
 import de.madcyph3r.materialnavigationdrawer.MaterialNavigationDrawerListener;
@@ -25,6 +24,7 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
     private Handler mProcessHandler;
 
     private StoreFragment mStoreFragment;
+    private MyAppFragment mMyAppFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +33,9 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
         HandlerThread ht = new HandlerThread("store_handler");
         ht.start();
         mProcessHandler = new Handler(ht.getLooper());
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
 
     public Handler getProcessHandler() {
@@ -45,10 +48,11 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
         setDrawerDPWidth(300);
 
         mStoreFragment = new StoreFragment();
+        mMyAppFragment = new MyAppFragment();
 
         MaterialMenu mMenu = new MaterialMenu();
         MaterialSection mStore = newSection(getString(R.string.store), this.getResources().getDrawable(R.drawable.ic_launcher), mStoreFragment, false);
-        MaterialSection mMyApps = newSection(getString(R.string.my_applications), this.getResources().getDrawable(R.drawable.ic_launcher), mStoreFragment, false);
+        MaterialSection mMyApps = newSection(getString(R.string.my_applications), this.getResources().getDrawable(R.drawable.ic_launcher), mMyAppFragment, false);
 
         MaterialSection settingsSection = this.newSection("Settings", true);
 

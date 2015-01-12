@@ -94,6 +94,15 @@ public class SuperRecyclerView extends FrameLayout {
         }
     }
 
+    public void setEmptyView(int resId) {
+        mEmptyId = resId;
+
+        mEmpty.setLayoutResource(mEmptyId);
+        if (mEmptyId != 0)
+            mEmpty.inflate();
+        mEmpty.setVisibility(View.GONE);
+    }
+
     private void initView() {
         if (isInEditMode()) {
             return;
