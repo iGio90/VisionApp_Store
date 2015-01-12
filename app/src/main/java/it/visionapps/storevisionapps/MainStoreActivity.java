@@ -57,10 +57,10 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
         mMenu.getSections().add(new MaterialDevisor());
         mMenu.getSections().add(settingsSection);
 
-        final Bitmap mHeadIcon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+        final Bitmap mHeadIcon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_seestore);
         final RoundedCornersDrawable drawableAppIcon = new RoundedCornersDrawable(getResources(), mHeadIcon);
 
-        MaterialHeadItem mHeadItem = new MaterialHeadItem("", "", drawableAppIcon, getResources().getDrawable(R.drawable.ic_launcher), mMenu, 0);
+        MaterialHeadItem mHeadItem = new MaterialHeadItem("", "", drawableAppIcon, getResources().getDrawable(R.drawable.logo_see_store), mMenu, 0);
         mHeadItem.setCloseDrawerOnChanged(true);
         addHeadItem(mHeadItem);
 

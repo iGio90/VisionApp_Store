@@ -12,8 +12,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.melnykov.fab.FloatingActionButton;
+import com.melnykov.fab.ObservableScrollView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -40,12 +43,15 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     // Details
     private boolean inDetails = false;
-    private LinearLayout mDetailsContainer;
+    private FrameLayout mDetailsContainer;
+    private ObservableScrollView mMainScrollView;
     private TextView mTitle;
     private TextView mVersion;
     private ImageView mIcon;
     private TextView mChangelog;
     private LinearLayout mScreenshots;
+    private TextView mDescription;
+    private FloatingActionButton mFab;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,12 +69,17 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         mAdapter = new AppAdapter(mActivity, this);
         mAppList.setAdapter(mAdapter);
 
-        mDetailsContainer = (LinearLayout) root.findViewById(R.id.app_details_fragment);
+        mDetailsContainer = (FrameLayout) root.findViewById(R.id.app_details_fragment);
+        mMainScrollView = (ObservableScrollView) root.findViewById(R.id.details_scroll);
         mTitle = (TextView) mDetailsContainer.findViewById(R.id.title);
         mVersion = (TextView) mDetailsContainer.findViewById(R.id.version);
         mIcon = (ImageView) mDetailsContainer.findViewById(R.id.icon);
         mChangelog = (TextView) mDetailsContainer.findViewById(R.id.changelog);
         mScreenshots = (LinearLayout) mDetailsContainer.findViewById(R.id.screenshots);
+        mDescription = (TextView) mDetailsContainer.findViewById(R.id.description);
+
+        mFab = (FloatingActionButton) mDetailsContainer.findViewById(R.id.fab);
+        mFab.attachToScrollView(mMainScrollView);
 
         fetchApps();
         return root;
@@ -140,12 +151,20 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 mVersion.setText(data.getString("version_name"));
                                 ImageLoader.getInstance().displayImage(data.getString("icon_url"), mIcon, App.getNoFallbackOptions());
                                 mChangelog.setText(data.getString("version_changelog"));
-                                mDetailsContainer.setVisibility(View.VISIBLE);
+                                mDescription.setText(data.getString("version_changelog"));
+                                if (Utils.isAppInstalled(mActivity, "packagename")) {
+                                    mFab.setImageResource(R.drawable.ic_delete);
+                                    mFab.setColorNormal(getResources().getColor(R.color.red_400));
+                                    mFab.setColorPressed(getResources().getColor(R.color.red_600));
+                                } else {
+                                    mFab.setImageResource(R.drawable.ic_file_download);
+                                    mFab.setColorNormal(getResources().getColor(R.color.green_400));
+                                    mFab.setColorPressed(getResources().getColor(R.color.green_600));
+                                }
 
                                 JSONArray screenshots = data.getJSONArray("screenshots_urls");
-                                Log.e("bam", "size :" + screenshots.length());
+                                mScreenshots.removeAllViews();
                                 for (int i=0;i<screenshots.length();i++) {
-                                    Log.e("bam", (String) screenshots.get(i));
                                     final ImageView mScreen = new ImageView(mActivity);
                                     ImageLoader.getInstance().displayImage((String) screenshots.get(i), mScreen, App.getNoFallbackOptions(), new ImageLoadingListener() {
                                         @Override
@@ -169,8 +188,9 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                         }
                                     });
                                 }
+
+                                mDetailsContainer.setVisibility(View.VISIBLE);
                             } catch (JSONException ignored) {
-                                Log.e("bam", ignored.toString());
                             }
                         }
                     });
