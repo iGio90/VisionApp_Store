@@ -264,6 +264,14 @@ public abstract class MaterialNavigationDrawer<Fragment> extends ActionBarActivi
         loadMenu();
     }
 
+    public boolean isDrawerOpen() {
+        return layout.isDrawerOpen(drawer);
+    }
+
+    public void openDrawer() {
+        layout.openDrawer(drawer);
+    }
+
     private void loadMenu() {
         //change menu only if a menu is defined
         if((currentHeadItem.getMenu() != null && currentMenu != currentHeadItem.getMenu()) || currentMenu == null) {
@@ -356,9 +364,9 @@ public abstract class MaterialNavigationDrawer<Fragment> extends ActionBarActivi
 
         // change for default Fragment / support Fragment
         if (fragment instanceof android.app.Fragment)
-            getFragmentManager().beginTransaction().replace(R.id.frame_container, (android.app.Fragment) fragment).commit();
+            getFragmentManager().beginTransaction().replace(R.id.frame_container, (android.app.Fragment) fragment).addToBackStack(null).commit();
         else if (fragment instanceof android.support.v4.app.Fragment)
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, (android.support.v4.app.Fragment) fragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, (android.support.v4.app.Fragment) fragment).addToBackStack(null).commit();
         else
             throw new RuntimeException("Fragment must be android.app.Fragment or android.support.v4.app.Fragment");
 

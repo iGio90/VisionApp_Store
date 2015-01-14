@@ -195,7 +195,12 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
                 mStoreFragment.isInDetails()) {
             mStoreFragment.leaveDetails();
         } else {
-            super.onBackPressed();
+            int count = getSupportFragmentManager().getBackStackEntryCount();
+            if (count <= 1) {
+                finish();
+            } else {
+                getSupportFragmentManager().popBackStack();
+            }
         }
     }
 
