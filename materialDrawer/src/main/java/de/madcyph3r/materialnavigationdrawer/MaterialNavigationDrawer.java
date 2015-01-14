@@ -352,7 +352,7 @@ public abstract class MaterialNavigationDrawer<Fragment> extends ActionBarActivi
         this.getSupportActionBar().setTitle(title);
     }
 
-    private void setFragment(Fragment fragment, String title, boolean head) {
+    public void setFragment(Fragment fragment, String title, boolean head) {
 
         // change for default Fragment / support Fragment
         if (fragment instanceof android.app.Fragment)
@@ -364,7 +364,7 @@ public abstract class MaterialNavigationDrawer<Fragment> extends ActionBarActivi
 
         setTitle(title);
 
-        if(head == false)
+        if(!head)
             layout.closeDrawer(drawer);
     }
 

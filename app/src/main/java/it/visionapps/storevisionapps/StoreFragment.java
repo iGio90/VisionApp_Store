@@ -1,6 +1,9 @@
 package it.visionapps.storevisionapps;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,6 +26,9 @@ import com.melnykov.fab.ObservableScrollView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,7 +51,6 @@ import it.visionapps.storevisionapps.widgets.SuperRecyclerView;
  * Created by iGio90 on 03/01/15.
  */
 public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AppAdapter.OnAppClicked {
-
     private SuperRecyclerView mAppList;
     private GridLayoutManager mAppLayoutManager;
     private AppAdapter mAdapter;
@@ -63,6 +68,8 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private LinearLayout mScreenshots;
     private TextView mDescription;
     private FloatingActionButton mFab;
+
+    private String mCurrentPack = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -94,6 +101,7 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         mFab.attachToScrollView(mMainScrollView);
 
         fetchApps();
+
         return root;
     }
 
@@ -164,7 +172,7 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 final String appVersion = data.getString("version_name");
                                 mVersion.setText(appVersion);
 
-                                String price = data.getString("app_price");
+                                final String price = data.getString("app_price");
                                 if (price.equals("free") || price.equals("0")) {
                                     mPrice.setText("Free");
                                 } else {
@@ -174,32 +182,24 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 mChangelog.setText(data.getString("version_changelog"));
                                 mDescription.setText(data.getString("app_description"));
                                 final String apkUrl = data.getString("apk_url");
-                                if (Utils.isAppInstalled(mActivity, data.getString("app_packagename"))) {
-                                    mFab.setImageResource(R.drawable.ic_delete);
-                                    mFab.setColorNormal(getResources().getColor(R.color.red_400));
-                                    mFab.setColorPressed(getResources().getColor(R.color.red_600));
-                                    mFab.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            try {
-                                                Uri packageUri = Uri.parse("package:" + data.getString("app_packagename"));
-                                                Intent uninstallIntent =
-                                                        new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
-                                                startActivity(uninstallIntent);
-                                            } catch (JSONException ignored) {}
+
+                                mCurrentPack = data.getString("app_packagename");
+                                mFab.setImageResource(R.drawable.ic_file_download);
+                                mFab.setColorNormal(getResources().getColor(R.color.green_400));
+                                mFab.setColorPressed(getResources().getColor(R.color.green_600));
+                                mFab.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (mPrice.getText().equals("Free")) {
+                                            mActivity.downloadApp(apkUrl, appName, appVersion);
+                                        } else {
+                                            mActivity.buyItem(price, appName, apkUrl, appName, appVersion);
                                         }
-                                    });
-                                } else {
-                                    mFab.setImageResource(R.drawable.ic_file_download);
-                                    mFab.setColorNormal(getResources().getColor(R.color.green_400));
-                                    mFab.setColorPressed(getResources().getColor(R.color.green_600));
-                                    mFab.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            mActivity.getProcessHandler().post(new DownloadThread(apkUrl, appName, appVersion));
-                                        }
-                                    });
-                                }
+                                    }
+                                });
+
+                                checkAppInstalled();
+                                checkAppUpdate(mCurrentPack, price, apkUrl, appName, appVersion);
 
                                 JSONArray screenshots = data.getJSONArray("screenshots_urls");
                                 mScreenshots.removeAllViews();
@@ -242,65 +242,69 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         });
     }
 
-    private void updateProgress(File file, int currentSize, int totalFileSize) {
-        Log.e("bam", "size: " + currentSize + " - " + totalFileSize);
-        if (currentSize == totalFileSize) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.fromFile(file),
-                    "application/vnd.android.package-archive");
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+    private void checkAppInstalled() {
+        if (Utils.isAppInstalled(mActivity, mCurrentPack)) {
+            mFab.setImageResource(R.drawable.ic_delete);
+            mFab.setColorNormal(getResources().getColor(R.color.red_400));
+            mFab.setColorPressed(getResources().getColor(R.color.red_600));
+            mFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri packageUri = Uri.parse("package:" + mCurrentPack);
+                    Intent uninstallIntent =
+                            new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
+                    startActivity(uninstallIntent);
+                }
+            });
+        }
+    }
+
+    private void checkAppUpdate(final String packName, final String version, final String price,
+                                final String apkUrl, final String appName) {
+        if (Utils.isAppInstalled(mActivity, mCurrentPack)) {
+            try {
+                PackageInfo pInfo = mActivity.getPackageManager().getPackageInfo(packName, 0);
+                if (pInfo.versionName.equals(version)) {
+                    mFab.setImageResource(R.drawable.ic_file_download);
+                    mFab.setColorNormal(getResources().getColor(R.color.purple_400));
+                    mFab.setColorPressed(getResources().getColor(R.color.purple_600));
+                    mFab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mPrice.getText().equals("Free")) {
+                                mActivity.downloadApp(apkUrl, appName, version);
+                            } else {
+                                mActivity.buyItem(price, appName, apkUrl, appName, version);
+                            }
+                        }
+                    });
+                }
+            } catch (PackageManager.NameNotFoundException ignored) {
+            }
         }
     }
 
     public void leaveDetails() {
         inDetails = false;
         mDetailsContainer.setVisibility(View.GONE);
+        mCurrentPack = "";
     }
 
     public boolean isInDetails() {
         return inDetails;
     }
 
-    class DownloadThread extends Thread {
-        String mUrl;
-        String mAppName;
-        String mVersion;
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (inDetails)
+            checkAppInstalled();
+    }
 
-        public DownloadThread(String url, String name, String version) {
-            mUrl = url;
-            mAppName = name;
-            mVersion = version;
-        }
-
-        @Override
-        public void run() {
-            try {
-                URL url = new URL(mUrl);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setDoOutput(true);
-                urlConnection.connect();
-                File file = new File(App.getInstance().getFilesDir(), mAppName + "_" + mVersion + ".apk");
-                file.setReadable(true, false);
-
-                FileOutputStream fileOutput = new FileOutputStream(file);
-                InputStream inputStream = urlConnection.getInputStream();
-
-                int totalSize = urlConnection.getContentLength();
-                int downloadedSize = 0;
-
-                byte[] buffer = new byte[1024];
-                int bufferLength = 0;
-
-                while ( (bufferLength = inputStream.read(buffer)) > 0 ) {
-                    fileOutput.write(buffer, 0, bufferLength);
-                    downloadedSize += bufferLength;
-                    updateProgress(file, downloadedSize, totalSize);
-                }
-                fileOutput.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+    public void setCurrentApp(String appName) {
+        for (int i=0;i<mAdapter.getItemCount();i++) {
+            if (appName.equals(mAdapter.getItem(i).getTitle())) {
+                onAppClicked(mAdapter.getItem(i));
             }
         }
     }

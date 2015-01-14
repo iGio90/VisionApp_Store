@@ -67,7 +67,7 @@ public class MyAppFragment extends Fragment implements AppAdapter.OnAppClicked {
                     JSONArray data = object.getJSONArray("data");
                     for (int i=0;i<data.length();i++) {
                         JSONObject model = data.getJSONObject(i);
-                        if (Utils.isAppInstalled(mActivity, model.getString("app_packagename"))) {
+                        if (!Utils.isAppInstalled(mActivity, model.getString("app_packagename"))) {
                             models.add(new AppModel(
                                     model.getString("app_name"),
                                     model.getString("icon_url")
@@ -94,6 +94,9 @@ public class MyAppFragment extends Fragment implements AppAdapter.OnAppClicked {
 
     @Override
     public void onAppClicked(AppModel appModel) {
-
+        if (mActivity != null) {
+            mActivity.setFragment(mActivity.mStoreFragment, getString(R.string.app_name), true);
+            mActivity.setCurrentApp(appModel.getTitle());
+        }
     }
 }
