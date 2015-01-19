@@ -50,9 +50,9 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
     private MaterialNavigationDrawer mDrawer;
 
     private Handler mProcessHandler;
+    private Handler mDownloadHandler;
 
     public StoreFragment mStoreFragment;
-    public MyAppFragment mMyAppFragment;
 
     private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_SANDBOX;
     private static final String CONFIG_CLIENT_ID = "ARmubBDj622v7v1htP1cDtS32c9TwzLyCUgrvpS69aLyN8bTotkt7lZvupS6";
@@ -75,6 +75,10 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
         HandlerThread ht = new HandlerThread("store_handler");
         ht.start();
         mProcessHandler = new Handler(ht.getLooper());
+
+        HandlerThread dl = new HandlerThread("download_handler");
+        dl.start();
+        mDownloadHandler = new Handler(dl.getLooper());
 
         Intent intent = new Intent(this, PayPalService.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
@@ -112,15 +116,12 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
         setDrawerDPWidth(300);
 
         mStoreFragment = new StoreFragment();
-        mMyAppFragment = new MyAppFragment();
 
         MaterialMenu mMenu = new MaterialMenu();
         MaterialSection mStore = newSection(getString(R.string.store), this.getResources().getDrawable(R.drawable.ic_launcher), mStoreFragment, false);
-        MaterialSection mMyApps = newSection(getString(R.string.my_applications), this.getResources().getDrawable(R.drawable.ic_launcher), mMyAppFragment, false);
         MaterialSection mSettings = newSection(getString(R.string.settings), new SettingsFragment(), true);
 
         mMenu.getSections().add(mStore);
-        mMenu.getSections().add(mMyApps);
         mMenu.getSections().add(new MaterialDevisor());
         mMenu.getSections().add(mSettings);
 
@@ -165,12 +166,17 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
         }
     }
 
-    public void downloadApp(String url, String name, String version) {
-        mProgress.setTitle(name);
-        mProgress.setMessage("Downloading...");
-        mProgress.setCancelable(false);
+    public void downloadApp(final String url, final String name, final String version) {
+        Utils.showDialog(this, "Condizioni", "bla bla bla", "Accetto", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mProgress.setTitle(name);
+                mProgress.setMessage("Downloading...");
+                mProgress.setCancelable(false);
 
-        mProcessHandler.post(new DownloadThread(url, name, version));
+                mDownloadHandler.post(new DownloadThread(url, name, version));
+            }
+        });
     }
 
     public void buyItem(String price, String appName, String url, String name, String version) {
@@ -218,12 +224,12 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
         @Override
         public void run() {
             try {
-                Log.e("bam", mUrl);
                 URL url = new URL(mUrl);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.setDoOutput(true);
                 urlConnection.connect();
+
                 File file = new File(App.getInstance().getFilesDir(), mAppName + "_" + mVersion + ".apk");
                 file.setReadable(true, false);
 
@@ -236,7 +242,7 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
                 byte[] buffer = new byte[1024];
                 int bufferLength = 0;
 
-                while ( (bufferLength = inputStream.read(buffer)) > 0 ) {
+                while ((bufferLength = inputStream.read(buffer)) > 0 ) {
                     fileOutput.write(buffer, 0, bufferLength);
                     downloadedSize += bufferLength;
                     updateProgress(file, downloadedSize, totalSize);
@@ -262,6 +268,8 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
         });
 
         if (currentSize == totalFileSize) {
+            file.setReadable(true, false);
+
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(Uri.fromFile(file),
                     "application/vnd.android.package-archive");

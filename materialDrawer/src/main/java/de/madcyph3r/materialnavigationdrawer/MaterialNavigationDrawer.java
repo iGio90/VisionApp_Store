@@ -240,7 +240,6 @@ public abstract class MaterialNavigationDrawer<Fragment> extends ActionBarActivi
         drawerToggle = new ActionBarDrawerToggle(this, layout, toolbar, R.string.nothing, R.string.nothing) {
 
             public void onDrawerClosed(View view) {
-                actionBar.setTitle(title);
                 invalidateOptionsMenu();
             }
 
@@ -369,8 +368,6 @@ public abstract class MaterialNavigationDrawer<Fragment> extends ActionBarActivi
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, (android.support.v4.app.Fragment) fragment).addToBackStack(null).commit();
         else
             throw new RuntimeException("Fragment must be android.app.Fragment or android.support.v4.app.Fragment");
-
-        setTitle(title);
 
         if(!head)
             layout.closeDrawer(drawer);

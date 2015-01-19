@@ -1,5 +1,6 @@
 package it.visionapps.storevisionapps;
 
+import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Base64;
@@ -33,6 +34,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;

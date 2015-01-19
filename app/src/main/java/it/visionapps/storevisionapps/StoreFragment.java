@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -67,7 +68,6 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private TextView mChangelog;
     private LinearLayout mScreenshots;
     private TextView mDescription;
-    private FloatingActionButton mFab;
 
     private String mCurrentPack = "";
 
@@ -96,9 +96,6 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         mChangelog = (TextView) mDetailsContainer.findViewById(R.id.changelog);
         mScreenshots = (LinearLayout) mDetailsContainer.findViewById(R.id.screenshots);
         mDescription = (TextView) mDetailsContainer.findViewById(R.id.description);
-
-        mFab = (FloatingActionButton) mDetailsContainer.findViewById(R.id.fab);
-        mFab.attachToScrollView(mMainScrollView);
 
         fetchApps();
 
@@ -129,14 +126,15 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 final ArrayList<AppModel> models = new ArrayList<>();
                 try {
                     JSONArray data = object.getJSONArray("data");
-                    for (int i=0;i<data.length();i++) {
+                    for (int i = 0; i < data.length(); i++) {
                         JSONObject model = data.getJSONObject(i);
                         models.add(new AppModel(
                                 model.getString("app_name"),
                                 model.getString("icon_url")
                         ));
                     }
-                } catch (JSONException ignored) {}
+                } catch (JSONException ignored) {
+                }
 
                 if (mActivity != null) {
                     mActivity.runOnUiThread(new Runnable() {
@@ -156,7 +154,7 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @Override
     public void onAppClicked(AppModel appModel) {
-        ApiHelper.parseApi(ApiHelper.APP_DETAILS + "/" + appModel.getTitle() + "/stable", new ApiHandler() {
+        ApiHelper.parseApi(ApiHelper.APP_DETAILS + "/" + Uri.encode(appModel.getTitle()) + "/stable", new ApiHandler() {
             @Override
             public void onSuccess(final JSONObject object) {
                 if (mActivity != null) {
@@ -172,11 +170,16 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 final String appVersion = data.getString("version_name");
                                 mVersion.setText(appVersion);
 
+                                mPrice.setBackgroundColor(getResources().getColor(R.color.green_600));
+                                mPrice.setTextColor(Color.WHITE);
+                                mPrice.setPadding(10, 10, 10, 10);
                                 final String price = data.getString("app_price");
                                 if (price.equals("free") || price.equals("0")) {
-                                    mPrice.setText("Free");
+                                    mPrice.setTag("Free");
+                                    mPrice.setText(getString(R.string.install).toUpperCase());
                                 } else {
-                                    mPrice.setText(price + "€");
+                                    mPrice.setTag(price + "€");
+                                    mPrice.setText(getString(R.string.buy).toUpperCase() + " (" + price + "€)");
                                 }
                                 ImageLoader.getInstance().displayImage(data.getString("icon_url"), mIcon, App.getNoFallbackOptions());
                                 mChangelog.setText(data.getString("version_changelog"));
@@ -184,13 +187,11 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 final String apkUrl = data.getString("apk_url");
 
                                 mCurrentPack = data.getString("app_packagename");
-                                mFab.setImageResource(R.drawable.ic_file_download);
-                                mFab.setColorNormal(getResources().getColor(R.color.green_400));
-                                mFab.setColorPressed(getResources().getColor(R.color.green_600));
-                                mFab.setOnClickListener(new View.OnClickListener() {
+
+                                mPrice.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        if (mPrice.getText().equals("Free")) {
+                                        if (mPrice.getTag().equals("Free")) {
                                             mActivity.downloadApp(apkUrl, appName, appVersion);
                                         } else {
                                             mActivity.buyItem(price, appName, apkUrl, appName, appVersion);
@@ -207,14 +208,10 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     final ImageView mScreen = new ImageView(mActivity);
                                     ImageLoader.getInstance().displayImage((String) screenshots.get(i), mScreen, App.getNoFallbackOptions(), new ImageLoadingListener() {
                                         @Override
-                                        public void onLoadingStarted(String imageUri, View view) {
-
-                                        }
+                                        public void onLoadingStarted(String imageUri, View view) {}
 
                                         @Override
-                                        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-
-                                        }
+                                        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {}
 
                                         @Override
                                         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
@@ -222,9 +219,7 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                         }
 
                                         @Override
-                                        public void onLoadingCancelled(String imageUri, View view) {
-
-                                        }
+                                        public void onLoadingCancelled(String imageUri, View view) {}
                                     });
                                 }
 
@@ -244,18 +239,8 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private void checkAppInstalled() {
         if (Utils.isAppInstalled(mActivity, mCurrentPack)) {
-            mFab.setImageResource(R.drawable.ic_delete);
-            mFab.setColorNormal(getResources().getColor(R.color.red_400));
-            mFab.setColorPressed(getResources().getColor(R.color.red_600));
-            mFab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Uri packageUri = Uri.parse("package:" + mCurrentPack);
-                    Intent uninstallIntent =
-                            new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
-                    startActivity(uninstallIntent);
-                }
-            });
+            mPrice.setText(getString(R.string.installed).toUpperCase());
+            mPrice.setBackgroundColor(getResources().getColor(R.color.grey_600));
         }
     }
 
@@ -265,13 +250,12 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             try {
                 PackageInfo pInfo = mActivity.getPackageManager().getPackageInfo(packName, 0);
                 if (pInfo.versionName.equals(version)) {
-                    mFab.setImageResource(R.drawable.ic_file_download);
-                    mFab.setColorNormal(getResources().getColor(R.color.purple_400));
-                    mFab.setColorPressed(getResources().getColor(R.color.purple_600));
-                    mFab.setOnClickListener(new View.OnClickListener() {
+                    mPrice.setText(getString(R.string.update).toUpperCase());
+                    mPrice.setBackgroundColor(getResources().getColor(R.color.orange_600));
+                    mPrice.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (mPrice.getText().equals("Free")) {
+                            if (mPrice.getTag().equals("Free")) {
                                 mActivity.downloadApp(apkUrl, appName, version);
                             } else {
                                 mActivity.buyItem(price, appName, apkUrl, appName, version);
