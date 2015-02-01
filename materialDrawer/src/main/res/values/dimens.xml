@@ -2,6 +2,6 @@
 <resources>
 
     <dimen name="statusMargin">0dp</dimen>
-    <dimen name="userSpace">164dp</dimen>
+    <dimen name="userSpace">100dp</dimen>
     <dimen name="photoMarginTop">16dp</dimen>
 </resources>

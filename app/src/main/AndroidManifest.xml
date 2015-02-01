@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="it.visionapps.storevisionapps" >
+    package="com.visionappseestore.android" >
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -14,6 +14,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".StartActivity"
+            android:screenOrientation="landscape"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.NoDisplay">
             <intent-filter android:label="@string/app_name">
@@ -30,6 +31,7 @@
         </activity>
         <activity
             android:name=".RegisterActivity"
+            android:screenOrientation="landscape"
             android:label="@string/title_activity_register"
             android:windowSoftInputMode="stateHidden"
             android:configChanges="keyboardHidden|orientation|screenLayout"
@@ -37,6 +39,7 @@
         </activity>
         <activity
             android:name=".ChangePasswordActivity"
+            android:screenOrientation="landscape"
             android:label="@string/title_activity_change_password"
             android:windowSoftInputMode="stateHidden"
             android:configChanges="keyboardHidden|orientation|screenLayout"
@@ -44,6 +47,7 @@
         </activity>
         <activity
             android:name=".MainStoreActivity"
+            android:screenOrientation="landscape"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

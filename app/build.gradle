@@ -12,11 +12,11 @@ android {
         }
     }
     defaultConfig {
-        applicationId "it.visionapps.storevisionapps"
+        applicationId "com.visionappseestore.android"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "20"
         signingConfig signingConfigs.release
     }
     buildTypes {

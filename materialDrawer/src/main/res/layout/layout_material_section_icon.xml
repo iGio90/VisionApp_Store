@@ -16,7 +16,7 @@
         android:id="@+id/section_text"
         android:layout_centerVertical="true"
         android:layout_marginLeft="72dp"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:textColor="@android:color/black"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:layout_toLeftOf="@+id/section_notification"

@@ -2,7 +2,7 @@
 <resources>
 
     <dimen name="statusMargin">25dp</dimen>
-    <dimen name="userSpace">189dp</dimen>
+    <dimen name="userSpace">100dp</dimen>
     <dimen name="photoMarginTop">41dp</dimen>
 
 </resources>

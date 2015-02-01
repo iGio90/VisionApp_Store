@@ -13,7 +13,7 @@
         android:layout_centerVertical="true"
         android:background="@color/grey_white_1000" >
 
-        <it.visionapps.storevisionapps.widgets.NexaTextView
+        <com.visionappseestore.android.widgets.NexaTextView
             android:id="@+id/register_title"
             android:layout_width="match_parent"
             android:layout_height="70dp"
@@ -36,7 +36,7 @@
             android:adjustViewBounds="true"
             android:src="@drawable/logo_login" />
 
-        <it.visionapps.storevisionapps.widgets.NexaTextView
+        <com.visionappseestore.android.widgets.NexaTextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
-                        <it.visionapps.storevisionapps.widgets.NexaEditText
+                        <com.visionappseestore.android.widgets.NexaEditText
                             android:id="@+id/register_nome"
                             android:layout_width="220dp"
                             android:layout_height="35dp"
@@ -79,8 +79,8 @@
                             android:ems="10"
                             android:hint="@string/register_text_nome"
                             android:inputType="textCapSentences">
-                        </it.visionapps.storevisionapps.widgets.NexaEditText>
-                        <it.visionapps.storevisionapps.widgets.NexaEditText
+                        </com.visionappseestore.android.widgets.NexaEditText>
+                        <com.visionappseestore.android.widgets.NexaEditText
                             android:id="@+id/register_email"
                             android:layout_width="220dp"
                             android:layout_height="35dp"
@@ -88,7 +88,7 @@
                             android:ems="10"
                             android:inputType="textEmailAddress"
                             android:layout_marginTop="20dp" />
-                        <it.visionapps.storevisionapps.widgets.NexaEditText
+                        <com.visionappseestore.android.widgets.NexaEditText
                             android:id="@+id/register_password"
                             android:layout_width="220dp"
                             android:layout_height="35dp"
@@ -103,7 +103,7 @@
                             android:layout_marginTop="30dp"
                             android:entries="@array/register_jobs"
                             android:prompt="@string/register_jobs_prompt" />
-                        <it.visionapps.storevisionapps.widgets.NexaEditText
+                        <com.visionappseestore.android.widgets.NexaEditText
                             android:id="@+id/register_via"
                             android:layout_width="220dp"
                             android:layout_height="35dp"
@@ -111,7 +111,7 @@
                             android:ems="10"
                             android:hint="@string/register_text_via"
                             android:inputType="text" />
-                        <it.visionapps.storevisionapps.widgets.NexaEditText
+                        <com.visionappseestore.android.widgets.NexaEditText
                             android:id="@+id/register_cap"
                             android:layout_width="220dp"
                             android:layout_height="35dp"
@@ -119,7 +119,7 @@
                             android:ems="10"
                             android:hint="@string/register_text_cap"
                             android:inputType="text|number" />
-                        <it.visionapps.storevisionapps.widgets.NexaEditText
+                        <com.visionappseestore.android.widgets.NexaEditText
                             android:id="@+id/register_provincia"
                             android:layout_width="220dp"
                             android:layout_height="35dp"
@@ -128,7 +128,7 @@
                             android:hint="@string/register_text_provincia"
                             android:inputType="textCapCharacters"
                             android:maxLength="2" />
-                        <it.visionapps.storevisionapps.widgets.NexaEditText
+                        <com.visionappseestore.android.widgets.NexaEditText
                             android:maxLength="11"
                             android:id="@+id/register_piva"
                             android:layout_width="220dp"
@@ -140,7 +140,7 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
-                            <it.visionapps.storevisionapps.widgets.NexaTextView
+                            <com.visionappseestore.android.widgets.NexaTextView
                                 android:id="@+id/textView3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -150,7 +150,7 @@
                                 android:layout_toRightOf="@+id/register_privacy"
                                 android:text="Accetto i " />
 
-                            <it.visionapps.storevisionapps.widgets.NexaTextView
+                            <com.visionappseestore.android.widgets.NexaTextView
                                 android:id="@+id/register_linktermini"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -160,7 +160,7 @@
                                 android:text="termini di servizio"
                                 android:textColor="@color/light_blue_700" />
 
-                            <it.visionapps.storevisionapps.widgets.NexaTextView
+                            <com.visionappseestore.android.widgets.NexaTextView
                                 android:id="@+id/textView9"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -169,7 +169,7 @@
                                 android:layout_toRightOf="@+id/register_linktermini"
                                 android:text=" e le " />
 
-                            <it.visionapps.storevisionapps.widgets.NexaTextView
+                            <com.visionappseestore.android.widgets.NexaTextView
                                 android:id="@+id/register_linkprivacy"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -178,7 +178,7 @@
                                 android:text="norme sulla privacy"
                                 android:textColor="@color/light_blue_700" />
 
-                            <it.visionapps.storevisionapps.widgets.NexaTextView
+                            <com.visionappseestore.android.widgets.NexaTextView
                                 android:id="@+id/textView12"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -210,7 +210,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
-                        <it.visionapps.storevisionapps.widgets.NexaEditText
+                        <com.visionappseestore.android.widgets.NexaEditText
                             android:id="@+id/register_cognome"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -218,7 +218,7 @@
                             android:hint="@string/register_text_cognome"
                             android:inputType="textCapSentences"
                             android:layout_marginTop="7dp" />
-                        <it.visionapps.storevisionapps.widgets.NexaEditText
+                        <com.visionappseestore.android.widgets.NexaEditText
                             android:id="@+id/register_email1"
                             android:layout_width="220dp"
                             android:layout_height="35dp"
@@ -227,7 +227,7 @@
                             android:ems="10"
                             android:inputType="textEmailAddress" />
 
-                        <it.visionapps.storevisionapps.widgets.NexaEditText
+                        <com.visionappseestore.android.widgets.NexaEditText
                             android:id="@+id/register_password1"
                             android:layout_width="220dp"
                             android:layout_height="35dp"
@@ -235,7 +235,7 @@
                             android:ems="10"
                             android:layout_marginTop="20dp"
                             android:inputType="textPassword" />
-                        <it.visionapps.storevisionapps.widgets.NexaEditText
+                        <com.visionappseestore.android.widgets.NexaEditText
                             android:hint="@string/register_text_ragionesociale"
                             android:id="@+id/register_ragionesociale"
                             android:layout_width="220dp"
@@ -243,7 +243,7 @@
                             android:layout_marginTop="95dp"
                             android:ems="10"
                             android:inputType="textCapSentences" />
-                        <it.visionapps.storevisionapps.widgets.NexaEditText
+                        <com.visionappseestore.android.widgets.NexaEditText
                             android:id="@+id/register_numerocivico"
                             android:layout_width="220dp"
                             android:layout_height="35dp"
@@ -251,7 +251,7 @@
                             android:hint="@string/register_text_numerocivico"
                             android:inputType="text|number"
                             android:layout_marginTop="20dp" />
-                        <it.visionapps.storevisionapps.widgets.NexaEditText
+                        <com.visionappseestore.android.widgets.NexaEditText
                             android:id="@+id/register_citta"
                             android:layout_width="220dp"
                             android:layout_height="35dp"
@@ -259,7 +259,7 @@
                             android:hint="@string/register_text_citta"
                             android:layout_marginTop="20dp"
                             android:inputType="textCapSentences" />
-                        <it.visionapps.storevisionapps.widgets.NexaEditText
+                        <com.visionappseestore.android.widgets.NexaEditText
                             android:id="@+id/register_stato"
                             android:layout_width="220dp"
                             android:layout_height="35dp"

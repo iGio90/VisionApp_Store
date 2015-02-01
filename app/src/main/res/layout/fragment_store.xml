@@ -11,17 +11,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <it.visionapps.storevisionapps.widgets.SuperRecyclerView
-            android:id="@+id/list"
-            android:scrollbars="vertical"
-            android:fadingEdge="none"
-            android:overScrollMode="never"
-            android:fadingEdgeLength="0dp"
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"/>
-    </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:src="@drawable/see_store_logo"
+            android:id="@+id/imageView"
+            android:padding="25dp" />
 
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/imageView">
+
+            <com.visionappseestore.android.widgets.SuperRecyclerView
+                android:id="@+id/list"
+                android:scrollbars="vertical"
+                android:fadingEdge="none"
+                android:overScrollMode="never"
+                android:fadingEdgeLength="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+        </RelativeLayout>
+    </RelativeLayout>
 
     <include
         android:id="@+id/app_details_fragment"

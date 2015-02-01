@@ -27,7 +27,7 @@
                     android:layout_height="75dp"
                     android:layout_width="75dp"
                     android:id="@+id/icon"
-                    android:src="@drawable/ic_seestore"
+                    android:src="@drawable/ic_menu_store"
                     android:scaleType="centerCrop"
                     android:layout_gravity="top|center_horizontal"
                     android:layout_centerVertical="true"

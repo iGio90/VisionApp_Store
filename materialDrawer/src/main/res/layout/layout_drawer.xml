@@ -89,8 +89,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
                 android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:background="@drawable/black_gradient">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/current_head_item_title"
