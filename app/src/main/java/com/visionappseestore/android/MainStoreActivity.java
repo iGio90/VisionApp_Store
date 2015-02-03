@@ -37,6 +37,7 @@ import de.madcyph3r.materialnavigationdrawer.menu.MaterialMenu;
 import de.madcyph3r.materialnavigationdrawer.menu.MaterialSection;
 import de.madcyph3r.materialnavigationdrawer.tools.RoundedCornersDrawable;
 import com.visionappseestore.android.service.UpdateService;
+import com.visionappseestore.android.updater.UpdaterSetup;
 
 /**
  * Created by iGio90 on 03/01/15.
@@ -85,6 +86,8 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
         mProgress = new ProgressDialog(this);
 
         startService(new Intent(this, UpdateService.class));
+
+        sendBroadcast(new Intent(this, UpdaterSetup.class));
     }
 
     @Override

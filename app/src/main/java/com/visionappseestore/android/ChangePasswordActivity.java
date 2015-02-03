@@ -92,7 +92,6 @@ public class ChangePasswordActivity extends Activity {
 	                    JSONObject jsonRes = new JSONObject(response);
 	                    
 	                    if (jsonRes.getInt("error_code") == 0){
-	                    	
 	        			      	new AlertDialog.Builder(activity)
 	        			      	.setMessage("Email per il reset della password inviata")
 	        			      	.setCancelable(true)
@@ -102,7 +101,6 @@ public class ChangePasswordActivity extends Activity {
 	        							  }}).create().show();
 	        			      	
 	                    } else {
-	                    	
 	        			      	new AlertDialog.Builder(activity)
 	        			      	.setMessage(jsonRes.getString("message"))
 	        			      	.setCancelable(true)

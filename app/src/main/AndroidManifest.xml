@@ -59,6 +59,17 @@
 
         <service android:name=".service.UpdateService" />
 
+        <service android:name=".updater.UpdaterService" android:process=":hascode_process" />
+
+        <receiver android:name=".updater.UpdaterReceiver" android:process=":hascode_process" />
+
+        <receiver android:name=".updater.UpdaterSetup" android:process=":hascode_process">
+            <intent-filter >
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+
         <receiver android:name=".service.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

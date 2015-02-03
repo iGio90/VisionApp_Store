@@ -90,7 +90,6 @@
                 android:textColor="@color/grey_black_1000"
                 android:text="@string/changelog_title"
                 android:padding="2dp"
-                android:singleLine="true"
                 android:layout_marginTop="12dp" />
 
             <android.support.v7.widget.CardView
@@ -113,8 +112,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/changelog"
                         android:textColor="@color/grey_800"
-                        android:padding="2dp"
-                        android:singleLine="true" />
+                        android:padding="2dp"/>
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
@@ -141,7 +139,6 @@
                 android:textColor="@color/grey_black_1000"
                 android:text="@string/description_title"
                 android:padding="2dp"
-                android:singleLine="true"
                 android:layout_marginTop="12dp" />
 
             <android.support.v7.widget.CardView
@@ -159,8 +156,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/description"
                         android:textColor="@color/grey_800"
-                        android:padding="2dp"
-                        android:singleLine="true"/>
+                        android:padding="2dp"/>
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>

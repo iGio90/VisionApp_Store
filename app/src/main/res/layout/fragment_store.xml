@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/see_store_logo"
             android:id="@+id/imageView"
-            android:padding="25dp" />
+            android:padding="10dp" />
 
         <RelativeLayout
             android:layout_width="fill_parent"

@@ -84,7 +84,7 @@ public class AutoGridRecyclerView extends RecyclerView {
         super.onMeasure(widthSpec, heightSpec);
         int width = MeasureSpec.getSize(widthSpec);
         if (width != 0) {
-            int spans = width / Utils.dpToPx(150, getContext().getResources());
+            int spans = width / Utils.dpToPx(250, getContext().getResources());
             if (spans > 0 && getLayoutManager() instanceof GridLayoutManager) {
                 ((GridLayoutManager)getLayoutManager()).setSpanCount(spans);
             }

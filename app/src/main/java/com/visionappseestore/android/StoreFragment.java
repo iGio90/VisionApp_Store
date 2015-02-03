@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -190,6 +192,11 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 mScreenshots.removeAllViews();
                                 for (int i=0;i<screenshots.length();i++) {
                                     final ImageView mScreen = new ImageView(mActivity);
+                                    final LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+                                    mScreen.setMaxHeight(250);
+                                    mParams.setMargins(10,0,10,0);
+
                                     ImageLoader.getInstance().displayImage((String) screenshots.get(i), mScreen, App.getNoFallbackOptions(), new ImageLoadingListener() {
                                         @Override
                                         public void onLoadingStarted(String imageUri, View view) {}
@@ -199,7 +206,7 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                                         @Override
                                         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                                            mScreenshots.addView(mScreen);
+                                            mScreenshots.addView(mScreen, mParams);
                                         }
 
                                         @Override
@@ -225,6 +232,7 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         if (Utils.isAppInstalled(mActivity, mCurrentPack)) {
             mPrice.setText(getString(R.string.installed).toUpperCase());
             mPrice.setBackgroundColor(getResources().getColor(R.color.grey_600));
+            mPrice.setOnClickListener(null);
         }
     }
 
