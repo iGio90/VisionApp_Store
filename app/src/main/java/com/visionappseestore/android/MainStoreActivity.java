@@ -1,7 +1,9 @@
 package com.visionappseestore.android;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +20,7 @@ import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -36,6 +39,9 @@ import de.madcyph3r.materialnavigationdrawer.menu.MaterialDevisor;
 import de.madcyph3r.materialnavigationdrawer.menu.MaterialMenu;
 import de.madcyph3r.materialnavigationdrawer.menu.MaterialSection;
 import de.madcyph3r.materialnavigationdrawer.tools.RoundedCornersDrawable;
+
+import com.visionappseestore.android.adapters.AppModel;
+import com.visionappseestore.android.controllers.UserPackageController;
 import com.visionappseestore.android.service.UpdateService;
 import com.visionappseestore.android.updater.UpdaterSetup;
 
@@ -64,6 +70,8 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
     private String mCurrentAppName = "";
     private String mCurrentAppVersion = "";
 
+    private UserPackageController mPackageController;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,17 +84,18 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
         dl.start();
         mDownloadHandler = new Handler(dl.getLooper());
 
-        Intent intent = new Intent(this, PayPalService.class);
-        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-        startService(intent);
-
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
         mProgress = new ProgressDialog(this);
+        mPackageController = new UserPackageController();
+        checkPurchasedApps();
 
+        Intent intent = new Intent(this, PayPalService.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+
+        startService(intent);
         startService(new Intent(this, UpdateService.class));
-
         sendBroadcast(new Intent(this, UpdaterSetup.class));
     }
 
@@ -274,5 +283,43 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
+    }
+
+    private void checkPurchasedApps() {
+        ApiHelper.parseApi(ApiHelper.APP_PURCHASE_LIST, new ApiHandler() {
+            @Override
+            public void onSuccess(JSONObject object) {
+                try {
+                    JSONArray data = object.getJSONArray("data");
+                    for (int i=0;i<=data.length();i++) {
+                        JSONObject appData = (JSONObject) data.get(i);
+                        mPackageController.addModel(new AppModel(
+                                Integer.parseInt(appData.getString("app_id")),
+                                appData.getString("app_name"),
+                                appData.getString("icon_url")
+                        ));
+                    }
+                } catch (JSONException e) {
+                    onError("");
+                }
+            }
+
+            @Override
+            public void onError(String e) {
+                new AlertDialog.Builder(MainStoreActivity.this)
+                        .setMessage("Errore nella verifica dei pacchetti acquistati. Si prega di riprovare in seguito!")
+                        .setCancelable(true)
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                                finish();
+                            }
+                        }).create().show();
+            }
+        });
+    }
+
+    public UserPackageController getPackageController() {
+        return mPackageController;
     }
 }

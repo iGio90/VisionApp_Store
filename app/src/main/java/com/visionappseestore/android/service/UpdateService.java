@@ -66,6 +66,7 @@ public class UpdateService extends Service {
                                         PackageInfo pInfo = getPackageManager().getPackageInfo(model.getString("app_packagename"), 0);
                                         if (pInfo.versionName.equals(model.getString("version_name"))) {
                                             models.add(new AppModel(
+                                                    Integer.parseInt(model.getString("app_id")),
                                                     model.getString("app_name"),
                                                     model.getString("icon_url")
                                             ));

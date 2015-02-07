@@ -115,6 +115,7 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     for (int i = 0; i < data.length(); i++) {
                         JSONObject model = data.getJSONObject(i);
                         models.add(new AppModel(
+                                Integer.parseInt(model.getString("app_id")),
                                 model.getString("app_name"),
                                 model.getString("icon_url")
                         ));
@@ -160,7 +161,10 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 mPrice.setTextColor(Color.WHITE);
                                 mPrice.setPadding(10, 10, 10, 10);
                                 final String price = data.getString("app_price");
-                                if (price.equals("free") || price.equals("0")) {
+                                if (price.equals("free") || price.equals("0") ||
+                                    // check if the plugin (that usually doesn't receive update) is purchased/installed
+                                    mActivity.getPackageController().getModel(Integer.parseInt(data.getString("app_id"))) != null) {
+
                                     mPrice.setTag("Free");
                                     mPrice.setText(getString(R.string.install).toUpperCase());
                                 } else {
@@ -185,7 +189,10 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     }
                                 });
 
-                                checkAppInstalled();
+                                if (data.getString("app_category").equals("Applications")) {
+                                    checkAppInstalled();
+                                }
+
                                 checkAppUpdate(mCurrentPack, price, apkUrl, appName, appVersion);
 
                                 JSONArray screenshots = data.getJSONArray("screenshots_urls");
