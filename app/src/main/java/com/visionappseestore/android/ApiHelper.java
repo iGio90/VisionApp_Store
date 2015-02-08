@@ -1,6 +1,7 @@
 package com.visionappseestore.android;
 
 import android.util.Base64;
+import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -20,8 +21,20 @@ import java.security.cert.CertificateException;
 public class ApiHelper {
     public static final String APP_LIST = "https://www.visionapps.it/app/api_v2/apps_list";
     public static final String APP_DETAILS = "https://www.visionapps.it/app/api_v2/apps_update";
-
     public static final String APP_PURCHASE_LIST = "https://www.visionapps.it/app/api_v2/payments_list";
+    public static final String APP_DOWNLOADED = "https://www.visionapps.it/app/api_v2/payments_verify/free";
+
+    public static void purchaseApp(String appId) {
+        parseApi(APP_DOWNLOADED + "?app_id=" + appId, new ApiHandler() {
+            @Override
+            public void onSuccess(JSONObject object) {
+            }
+
+            @Override
+            public void onError(String e) {
+            }
+        });
+    }
 
     public static void parseApi(String api, ApiHandler handler) {
         ApiThread thread = new ApiThread(api, handler);

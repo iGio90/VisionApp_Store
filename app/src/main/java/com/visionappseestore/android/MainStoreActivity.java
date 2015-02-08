@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 
 import com.paypal.android.sdk.payments.PayPalConfiguration;
@@ -66,6 +67,7 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
 
     private ProgressDialog mProgress;
 
+    private String mCurrentAppId = "";
     private String mCurrentUrl = "";
     private String mCurrentAppName = "";
     private String mCurrentAppVersion = "";
@@ -163,8 +165,12 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
                         JSONObject client = confirm.toJSONObject();
                         JSONObject response = client.getJSONObject("response");
                         String state = response.getString("state");
+                        String id = response.getString("id");
+
+                        Log.e("bam", response.toString());
+
                         if (state.equals("approved")) {
-                            downloadApp(mCurrentUrl, mCurrentAppName, mCurrentAppVersion);
+                            downloadApp(mCurrentAppId, mCurrentUrl, mCurrentAppName, mCurrentAppVersion);
                         }
                     } catch (JSONException ignored) {
                     }
@@ -173,32 +179,37 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
         }
     }
 
-    public void downloadApp(final String url, final String name, final String version) {
+    public void downloadApp(final String appId,
+                            final String url, final String name, final String version) {
         Utils.showDialog(this, "Condizioni", "bla bla bla", "Accetto", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mProgress.setTitle(name);
                 mProgress.setMessage("Downloading...");
                 mProgress.setCancelable(false);
+                mProgress.show();
+
+                ApiHelper.purchaseApp(appId);
 
                 mDownloadHandler.post(new DownloadThread(url, name, version));
             }
         });
     }
 
-    public void buyItem(String price, String appName, String url, String name, String version) {
-        PayPalPayment thingToBuy = getThingToBuy(PayPalPayment.PAYMENT_INTENT_SALE, price, appName);
+    public void buyItem(String id, String price, String url, String name, String version) {
+        PayPalPayment thingToBuy = getThingToBuy(PayPalPayment.PAYMENT_INTENT_SALE, price, id);
         Intent intent = new Intent(this, PaymentActivity.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
         intent.putExtra(PaymentActivity.EXTRA_PAYMENT, thingToBuy);
+        mCurrentAppId = id;
         mCurrentUrl = url;
         mCurrentAppName = name;
         mCurrentAppVersion = version;
         startActivityForResult(intent, REQUEST_CODE_PAYMENT);
     }
 
-    private PayPalPayment getThingToBuy(String paymentIntent, String price, String appName) {
-        return new PayPalPayment(new BigDecimal(price), "EUR", appName,
+    private PayPalPayment getThingToBuy(String paymentIntent, String price, String appId) {
+        return new PayPalPayment(new BigDecimal(price), "EUR", appId,
                 paymentIntent);
     }
 

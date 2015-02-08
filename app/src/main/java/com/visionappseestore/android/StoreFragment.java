@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.util.Log;
@@ -51,6 +52,8 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private TextView mVersion;
     private TextView mPrice;
     private ImageView mIcon;
+    private CardView mChangelogCard;
+    private TextView mChangelogLabel;
     private TextView mChangelog;
     private LinearLayout mScreenshots;
     private TextView mDescription;
@@ -79,6 +82,8 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         mVersion = (TextView) mDetailsContainer.findViewById(R.id.version);
         mPrice = (TextView) mDetailsContainer.findViewById(R.id.price);
         mIcon = (ImageView) mDetailsContainer.findViewById(R.id.icon);
+        mChangelogCard = (CardView) mDetailsContainer.findViewById(R.id.changelog_card);
+        mChangelogLabel = (TextView) mDetailsContainer.findViewById(R.id.changelog_label);
         mChangelog = (TextView) mDetailsContainer.findViewById(R.id.changelog);
         mScreenshots = (LinearLayout) mDetailsContainer.findViewById(R.id.screenshots);
         mDescription = (TextView) mDetailsContainer.findViewById(R.id.description);
@@ -152,6 +157,7 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                             try {
                                 final JSONObject data = object.getJSONObject("data");
+                                final String appId = data.getString("app_id");
                                 final String appName = data.getString("app_name");
                                 mTitle.setText(appName);
                                 final String appVersion = data.getString("version_name");
@@ -163,7 +169,7 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 final String price = data.getString("app_price");
                                 if (price.equals("free") || price.equals("0") ||
                                     // check if the plugin (that usually doesn't receive update) is purchased/installed
-                                    mActivity.getPackageController().getModel(Integer.parseInt(data.getString("app_id"))) != null) {
+                                    mActivity.getPackageController().getModel(Integer.parseInt(appId)) != null) {
 
                                     mPrice.setTag("Free");
                                     mPrice.setText(getString(R.string.install).toUpperCase());
@@ -172,7 +178,6 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     mPrice.setText(getString(R.string.buy).toUpperCase() + " (" + price + "€)");
                                 }
                                 ImageLoader.getInstance().displayImage(data.getString("icon_url"), mIcon, App.getNoFallbackOptions());
-                                mChangelog.setText(data.getString("version_changelog"));
                                 mDescription.setText(data.getString("app_description"));
                                 final String apkUrl = data.getString("apk_url");
 
@@ -182,18 +187,24 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     @Override
                                     public void onClick(View v) {
                                         if (mPrice.getTag().equals("Free")) {
-                                            mActivity.downloadApp(apkUrl, appName, appVersion);
+                                            mActivity.downloadApp(appId, apkUrl, appName, appVersion);
                                         } else {
-                                            mActivity.buyItem(price, appName, apkUrl, appName, appVersion);
+                                            mActivity.buyItem(appId, price, apkUrl, appName, appVersion);
                                         }
                                     }
                                 });
 
                                 if (data.getString("app_category").equals("Applications")) {
                                     checkAppInstalled();
+                                    mChangelog.setText(data.getString("version_changelog"));
+                                    mChangelogCard.setVisibility(View.VISIBLE);
+                                    mChangelogLabel.setVisibility(View.VISIBLE);
+                                } else {
+                                    mChangelogCard.setVisibility(View.GONE);
+                                    mChangelogLabel.setVisibility(View.GONE);
                                 }
 
-                                checkAppUpdate(mCurrentPack, price, apkUrl, appName, appVersion);
+                                checkAppUpdate(appId, mCurrentPack, price, apkUrl, appName, appVersion);
 
                                 JSONArray screenshots = data.getJSONArray("screenshots_urls");
                                 mScreenshots.removeAllViews();
@@ -243,7 +254,7 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
     }
 
-    private void checkAppUpdate(final String packName, final String version, final String price,
+    private void checkAppUpdate(final String appId, final String packName, final String version, final String price,
                                 final String apkUrl, final String appName) {
         if (Utils.isAppInstalled(mActivity, mCurrentPack)) {
             try {
@@ -255,9 +266,9 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         @Override
                         public void onClick(View v) {
                             if (mPrice.getTag().equals("Free")) {
-                                mActivity.downloadApp(apkUrl, appName, version);
+                                mActivity.downloadApp(appId, apkUrl, appName, version);
                             } else {
-                                mActivity.buyItem(price, appName, apkUrl, appName, version);
+                                mActivity.buyItem(appId, price, apkUrl, appName, version);
                             }
                         }
                     });
