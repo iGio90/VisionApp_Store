@@ -58,7 +58,7 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
     public StoreFragment mStoreFragment;
 
     private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_SANDBOX;
-    private static final String CONFIG_CLIENT_ID = "ARmubBDj622v7v1htP1cDtS32c9TwzLyCUgrvpS69aLyN8bTotkt7lZvupS6";
+    private static final String CONFIG_CLIENT_ID = "AfhUslDRAv-FRGx6hArFCTxFzpkgaLfAjeFe4CafxX8uS_H-Y9yO8SRQlJdP5_s54iaNkSRAGVmfZrrs";
     private static final int REQUEST_CODE_PAYMENT = 1;
 
     private static PayPalConfiguration config = new PayPalConfiguration()
