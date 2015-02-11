@@ -165,12 +165,24 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
                         JSONObject client = confirm.toJSONObject();
                         JSONObject response = client.getJSONObject("response");
                         String state = response.getString("state");
-                        String id = response.getString("id");
+                        final String id = response.getString("id");
 
                         Log.e("bam", response.toString());
 
                         if (state.equals("approved")) {
-                            downloadApp(mCurrentAppId, mCurrentUrl, mCurrentAppName, mCurrentAppVersion);
+                            Utils.showDialog(this, "Condizioni", "bla bla bla", "Accetto", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mProgress.setTitle(mCurrentAppName);
+                                    mProgress.setMessage("Downloading...");
+                                    mProgress.setCancelable(false);
+                                    mProgress.show();
+
+                                    ApiHelper.purchaseAppPaid(id);
+
+                                    mDownloadHandler.post(new DownloadThread(mCurrentUrl, mCurrentAppName, mCurrentAppVersion));
+                                }
+                            });
                         }
                     } catch (JSONException ignored) {
                     }
@@ -189,7 +201,7 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
                 mProgress.setCancelable(false);
                 mProgress.show();
 
-                ApiHelper.purchaseApp(appId);
+                ApiHelper.purchaseAppFree(appId);
 
                 mDownloadHandler.post(new DownloadThread(url, name, version));
             }

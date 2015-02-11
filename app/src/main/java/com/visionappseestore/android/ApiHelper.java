@@ -23,9 +23,23 @@ public class ApiHelper {
     public static final String APP_DETAILS = "https://www.visionapps.it/app/api_v2/apps_update";
     public static final String APP_PURCHASE_LIST = "https://www.visionapps.it/app/api_v2/payments_list";
     public static final String APP_DOWNLOADED = "https://www.visionapps.it/app/api_v2/payments_verify/free";
+    public static final String APP_DOWNLOADED_PAYPAL =
+            "https://www.visionapps.it/app/api_v2/payments_verify/paypal?paypal_sandbox=1";
 
-    public static void purchaseApp(String appId) {
+    public static void purchaseAppFree(String appId) {
         parseApi(APP_DOWNLOADED + "?app_id=" + appId, new ApiHandler() {
+            @Override
+            public void onSuccess(JSONObject object) {
+            }
+
+            @Override
+            public void onError(String e) {
+            }
+        });
+    }
+
+    public static void purchaseAppPaid(String paymentId) {
+        parseApi(APP_DOWNLOADED + "&paypal_payment_id=" + paymentId, new ApiHandler() {
             @Override
             public void onSuccess(JSONObject object) {
             }
