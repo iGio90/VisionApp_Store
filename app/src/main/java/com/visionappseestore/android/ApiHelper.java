@@ -39,7 +39,7 @@ public class ApiHelper {
     }
 
     public static void purchaseAppPaid(String paymentId) {
-        parseApi(APP_DOWNLOADED + "&paypal_payment_id=" + paymentId, new ApiHandler() {
+        parseApi(APP_DOWNLOADED_PAYPAL + "&paypal_payment_id=" + paymentId, new ApiHandler() {
             @Override
             public void onSuccess(JSONObject object) {
             }
