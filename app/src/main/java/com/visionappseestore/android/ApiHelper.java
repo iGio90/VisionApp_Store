@@ -42,6 +42,7 @@ public class ApiHelper {
         parseApi(APP_DOWNLOADED_PAYPAL + "&paypal_payment_id=" + paymentId, new ApiHandler() {
             @Override
             public void onSuccess(JSONObject object) {
+                Log.e("bam", object.toString());
             }
 
             @Override

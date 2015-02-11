@@ -173,14 +173,7 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
                             Utils.showDialog(this, "Condizioni", "bla bla bla", "Accetto", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    mProgress.setTitle(mCurrentAppName);
-                                    mProgress.setMessage("Downloading...");
-                                    mProgress.setCancelable(false);
-                                    mProgress.show();
-
                                     ApiHelper.purchaseAppPaid(id);
-
-                                    mDownloadHandler.post(new DownloadThread(mCurrentUrl, mCurrentAppName, mCurrentAppVersion));
                                 }
                             });
                         }
