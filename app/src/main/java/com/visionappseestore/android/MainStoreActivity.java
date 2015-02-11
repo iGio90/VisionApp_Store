@@ -170,12 +170,7 @@ public class MainStoreActivity extends MaterialNavigationDrawer implements Mater
                         Log.e("bam", response.toString());
 
                         if (state.equals("approved")) {
-                            Utils.showDialog(this, "Condizioni", "bla bla bla", "Accetto", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    ApiHelper.purchaseAppPaid(id);
-                                }
-                            });
+                            ApiHelper.purchaseAppPaid(id);
                         }
                     } catch (JSONException ignored) {
                     }
