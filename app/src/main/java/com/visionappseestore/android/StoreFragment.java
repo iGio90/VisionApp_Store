@@ -161,7 +161,7 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 final String appName = data.getString("app_name");
                                 mTitle.setText(appName);
                                 final String appVersion = data.getString("version_name");
-                                mVersion.setText(appVersion);
+                                //mVersion.setText(appVersion);
 
                                 mPrice.setBackgroundColor(getResources().getColor(R.color.green_600));
                                 mPrice.setTextColor(Color.WHITE);
@@ -204,7 +204,7 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     mChangelogLabel.setVisibility(View.GONE);
                                 }
 
-                                checkAppUpdate(appId, mCurrentPack, price, apkUrl, appName, appVersion);
+                                checkAppUpdate(appId, mCurrentPack, appVersion, price, apkUrl, appName);
 
                                 JSONArray screenshots = data.getJSONArray("screenshots_urls");
                                 mScreenshots.removeAllViews();
@@ -259,7 +259,9 @@ public class StoreFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         if (Utils.isAppInstalled(mActivity, mCurrentPack)) {
             try {
                 PackageInfo pInfo = mActivity.getPackageManager().getPackageInfo(packName, 0);
-                if (pInfo.versionName.equals(version)) {
+                int currentVersion = pInfo.versionCode;
+                int upstreamVersion = Integer.valueOf(version);
+                if (upstreamVersion > currentVersion) {
                     mPrice.setText(getString(R.string.update).toUpperCase());
                     mPrice.setBackgroundColor(getResources().getColor(R.color.orange_600));
                     mPrice.setOnClickListener(new View.OnClickListener() {
